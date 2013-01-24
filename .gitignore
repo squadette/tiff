@@ -8,3 +8,4 @@ config.log
 config.status
 libtool
 *.pc
+autom4te.cache
