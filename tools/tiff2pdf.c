@@ -52,6 +52,8 @@
 #include "tiffiop.h"
 #include "tiffio.h"
 
+#include "ConvertUTF.h"
+
 #ifndef HAVE_GETOPT
 extern int getopt(int, char**, char*);
 #endif
@@ -3748,7 +3750,7 @@ tsize_t t2p_write_pdf_name(unsigned char* name, TIFF* output){
  * This function writes a PDF string object to output.
  */
 	
-tsize_t t2p_write_pdf_string(char* pdfstr, TIFF* output)
+tsize_t t2p_write_pdf_string_old(char* pdfstr, TIFF* output)
 {
 	tsize_t written = 0;
 	uint32 i = 0;
@@ -3797,6 +3799,44 @@ tsize_t t2p_write_pdf_string(char* pdfstr, TIFF* output)
 	return(written);
 }
 
+tsize_t t2p_write_pdf_string(char* pdfstr, TIFF* output)
+{
+	int slen = strlen(pdfstr);
+	char *pdfstrend = pdfstr + slen;
+
+	if (isLegalUTF8Sequence(pdfstr, pdfstrend)) {
+		tsize_t written = 0;
+		int maxcount = slen * 2;
+		int bufsize = maxcount * sizeof(UTF16);
+		UTF16 *buf0 = malloc(bufsize);
+		UTF16 *buf = buf0;
+		
+		char *pdfstrbegin = pdfstr;
+		
+		UTF16 tmpchar;
+		
+		written += t2pWriteFile(output, (tdata_t) "(", 1);
+		
+		tmpchar = htons(0xFEFF);
+		written += t2pWriteFile(output, (tdata_t) &tmpchar, sizeof(tmpchar));
+		
+		if (ConvertUTF8toUTF16(&pdfstrbegin, pdfstrend, &buf, buf + maxcount, 0) == conversionOK) {
+		
+			written += t2pWriteFile(output, (tdata_t) buf0, (buf - buf0) * sizeof(UTF16));
+			
+	    } else {
+		 /* ... */
+		}
+	
+		written += t2pWriteFile(output, (tdata_t) ")", 1);
+	
+		free(buf0);
+		
+		return written;
+	} else {
+		return t2p_write_pdf_string_old(pdfstr, output);
+	}
+}
 
 /*
 	This function writes a buffer of data to output.
