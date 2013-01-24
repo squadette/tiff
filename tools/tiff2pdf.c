@@ -3750,7 +3750,7 @@ tsize_t t2p_write_pdf_name(unsigned char* name, TIFF* output){
  * This function writes a PDF string object to output.
  */
 	
-tsize_t t2p_write_pdf_string_old(char* pdfstr, TIFF* output)
+tsize_t t2p_write_pdf_string_latin1(char* pdfstr, TIFF* output)
 {
 	tsize_t written = 0;
 	uint32 i = 0;
@@ -3804,7 +3804,7 @@ tsize_t t2p_write_pdf_string(char* pdfstr, TIFF* output)
 	int slen = strlen(pdfstr);
 	char *pdfstrend = pdfstr + slen;
 
-	if (isLegalUTF8Sequence(pdfstr, pdfstrend)) {
+	if (isLegalUTF8Sequence(pdfstr, pdfstrend) && !isLegalASCII7Sequence(pdfstr, pdfstrend)) {
 		tsize_t written = 0;
 		int maxcount = slen * 2;
 		int bufsize = maxcount * sizeof(UTF16);
@@ -3860,7 +3860,7 @@ tsize_t t2p_write_pdf_string(char* pdfstr, TIFF* output)
 		
 		return written;
 	} else {
-		return t2p_write_pdf_string_old(pdfstr, output);
+		return t2p_write_pdf_string_latin1(pdfstr, output);
 	}
 }
 
