@@ -3821,8 +3821,34 @@ tsize_t t2p_write_pdf_string(char* pdfstr, TIFF* output)
 		written += t2pWriteFile(output, (tdata_t) &tmpchar, sizeof(tmpchar));
 		
 		if (ConvertUTF8toUTF16(&pdfstrbegin, pdfstrend, &buf, buf + maxcount, 0) == conversionOK) {
-		
-			written += t2pWriteFile(output, (tdata_t) buf0, (buf - buf0) * sizeof(UTF16));
+			
+			char *cbuf = (char *) buf0;
+			int blen = (buf - buf0) * sizeof(UTF16);
+			
+			char *escaped0 = malloc(blen * 2);
+			char *escaped = escaped0;
+			int elen = blen;
+			
+			int i;
+			
+			for (i = 0; i < blen; i++) {
+				switch (cbuf[i]) {
+					case '(':
+					case ')': 
+					case '\\':
+					  *escaped++ = '\\';
+					  *escaped++ = cbuf[i];
+					  elen++;
+					  break;
+					
+					default:
+					  *escaped++ = cbuf[i];
+				}
+			}
+
+			written += t2pWriteFile(output, (tdata_t) escaped0, elen);
+			
+			free(escaped0);
 			
 	    } else {
 		 /* ... */
