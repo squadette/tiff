@@ -95,7 +95,7 @@ thumbnail_LDADD = $(LIBTIFF) $(LIBPORT)
 tiff2bw_SOURCES = tiff2bw.c
 tiff2bw_LDADD = $(LIBTIFF) $(LIBPORT)
 
-tiff2pdf_SOURCES = tiff2pdf.c
+tiff2pdf_SOURCES = tiff2pdf.c ConvertUTF.c ConvertUTF.h
 tiff2pdf_LDADD = $(LIBTIFF) $(LIBPORT)
 
 tiff2ps_SOURCES = tiff2ps.c

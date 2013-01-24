@@ -147,7 +147,7 @@ thumbnail_DEPENDENCIES = $(LIBTIFF) $(LIBPORT)
 am_tiff2bw_OBJECTS = tiff2bw.$(OBJEXT)
 tiff2bw_OBJECTS = $(am_tiff2bw_OBJECTS)
 tiff2bw_DEPENDENCIES = $(LIBTIFF) $(LIBPORT)
-am_tiff2pdf_OBJECTS = tiff2pdf.$(OBJEXT)
+am_tiff2pdf_OBJECTS = tiff2pdf.$(OBJEXT) ConvertUTF.$(OBJEXT)
 tiff2pdf_OBJECTS = $(am_tiff2pdf_OBJECTS)
 tiff2pdf_DEPENDENCIES = $(LIBTIFF) $(LIBPORT)
 am_tiff2ps_OBJECTS = tiff2ps.$(OBJEXT)
@@ -426,7 +426,7 @@ thumbnail_SOURCES = thumbnail.c
 thumbnail_LDADD = $(LIBTIFF) $(LIBPORT)
 tiff2bw_SOURCES = tiff2bw.c
 tiff2bw_LDADD = $(LIBTIFF) $(LIBPORT)
-tiff2pdf_SOURCES = tiff2pdf.c
+tiff2pdf_SOURCES = tiff2pdf.c ConvertUTF.c ConvertUTF.h
 tiff2pdf_LDADD = $(LIBTIFF) $(LIBPORT)
 tiff2ps_SOURCES = tiff2ps.c
 tiff2ps_LDADD = $(LIBTIFF) $(LIBPORT)
@@ -622,6 +622,7 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ConvertUTF.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/bmp2tiff.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/fax2ps.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/fax2tiff.Po@am__quote@
