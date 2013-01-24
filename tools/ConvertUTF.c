@@ -376,10 +376,10 @@ ConversionResult ConvertUTF8toUTF16 (
             result = sourceIllegal;
             break;
         } else {
-            *target++ = UNI_REPLACEMENT_CHAR;
+            *target++ = htons(UNI_REPLACEMENT_CHAR);
         }
         } else {
-        *target++ = (UTF16)ch; /* normal case */
+        *target++ = htons((UTF16)ch); /* normal case */
         }
     } else if (ch > UNI_MAX_UTF16) {
         if (flags == strictConversion) {
@@ -387,7 +387,7 @@ ConversionResult ConvertUTF8toUTF16 (
         source -= (extraBytesToRead+1); /* return to the start */
         break; /* Bail out; shouldn't continue */
         } else {
-        *target++ = UNI_REPLACEMENT_CHAR;
+        *target++ = htons(UNI_REPLACEMENT_CHAR);
         }
     } else {
         /* target is a character in range 0xFFFF - 0x10FFFF. */
@@ -396,8 +396,8 @@ ConversionResult ConvertUTF8toUTF16 (
         result = targetExhausted; break;
         }
         ch -= halfBase;
-        *target++ = (UTF16)((ch >> halfShift) + UNI_SUR_HIGH_START);
-        *target++ = (UTF16)((ch & halfMask) + UNI_SUR_LOW_START);
+        *target++ = htons((UTF16)((ch >> halfShift) + UNI_SUR_HIGH_START));
+        *target++ = htons((UTF16)((ch & halfMask) + UNI_SUR_LOW_START));
     }
     }
     *sourceStart = source;
