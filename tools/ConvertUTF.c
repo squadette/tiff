@@ -332,6 +332,19 @@ Boolean isLegalUTF8Sequence(const UTF8 *source, const UTF8 *sourceEnd) {
     return isLegalUTF8(source, length);
 }
 
+Boolean isLegalASCII7Sequence(const UTF8 *source, const UTF8 *sourceEnd) {
+	UTF8 *p;
+	
+	for (p = source; p < sourceEnd; p++) {
+	  if (*p & 0x80) {
+		return false;
+	  }
+	}
+	return true;
+}
+
+
+
 /* --------------------------------------------------------------------- */
 
 ConversionResult ConvertUTF8toUTF16 (
